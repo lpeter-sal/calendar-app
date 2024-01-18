@@ -1,5 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import { LoginPage, RegisterPage } from "../pages"
+import { LoginPage } from "../pages/LoginPage"
+import { RegisterPage } from "../pages/RegisterPage"
+
 
 
 

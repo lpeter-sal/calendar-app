@@ -1,7 +1,7 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Link } from "@mui/material";
 
-import './LoginPage.css';
+import './AuthStyles.css';
 
 
 export const LoginPage = () => {
@@ -15,7 +15,7 @@ export const LoginPage = () => {
             type="text"
             placeholder="Correo"
           />
-          <i class='bx bxs-envelope'></i>
+          <i className='bx bxs-envelope'></i>
         </div>
         <div className="input-box">
           <input
