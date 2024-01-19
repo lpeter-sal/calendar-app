@@ -5,7 +5,7 @@ import { CalendarRouter } from "../calendar/router/CalendarRouter";
 
 export const AppRouter = () => {
 
-  const authStatus = 'not-authenticated'; //'not-authenticated'
+  const authStatus = 'no-authenticated'; //'not-authenticated'
 
 
 
@@ -13,9 +13,9 @@ export const AppRouter = () => {
     <Routes>
       
         {
-          ( authStatus === 'authenticated')
-          ? <Route path="/*" element={ <CalendarRouter /> } />
-          : <Route path="/auth/*" element ={ <AuthRoutes /> } />
+          ( authStatus === 'not-authenticated')
+          ? <Route path="/auth/*" element ={ <AuthRoutes /> } />
+          : <Route path="/*" element={ <CalendarRouter /> } />
         }
 
         <Route path="/*" element={ <Navigate to="/auth/login" /> } />
