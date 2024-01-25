@@ -5,7 +5,7 @@ import { CalendarRouter } from "../calendar/router/CalendarRouter";
 
 export const AppRouter = () => {
 
-  const authStatus = 'n-authenticated'; //'not-authenticated'
+  const authStatus = 'not-authenticated'; //'not-authenticated'
 
 
 
