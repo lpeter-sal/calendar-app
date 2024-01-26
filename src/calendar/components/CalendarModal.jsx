@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import Modal from 'react-modal';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useCalendarSotre, useUiStore } from '../../hooks';
+import { useAuthStore, useCalendarSotre, useUiStore } from '../../hooks';
 
 
 const customStyles = {
@@ -24,6 +24,7 @@ const customStyles = {
 
 export const CalendarModal = () => {
 
+    const { user } = useAuthStore();
     const { isDateModalOpen, closeDateModal } = useUiStore();
     const { activeEvent, startSavingEvent } = useCalendarSotre();
 
@@ -118,6 +119,7 @@ export const CalendarModal = () => {
                     onChange={ ( event ) => onDateChanged( event, 'start') }
                     dateFormat="Pp"
                     showTimeSelect
+                    disabled={ (user.name !== activeEvent?.user.name ) ? true : false }
                 />
             </div>
 
@@ -131,6 +133,8 @@ export const CalendarModal = () => {
                     onChange={ ( event ) => onDateChanged( event, 'end') }
                     dateFormat="Pp"
                     showTimeSelect
+                    disabled={ (user.name !== activeEvent?.user.name ) ? true : false }
+
                 />
             </div>
 
@@ -145,6 +149,8 @@ export const CalendarModal = () => {
                     autoComplete="off"
                     value={ formValues.title }
                     onChange={ onInputChanged }
+                    disabled={ (user.name !== activeEvent?.user.name ) ? true : false }
+
                 />
                 <small id="emailHelp" className="form-text text-muted">A short description</small>
             </div>
@@ -158,6 +164,8 @@ export const CalendarModal = () => {
                     name="notes"
                     value={ formValues.notes }
                     onChange={ onInputChanged }
+                    disabled={ (user.name !== activeEvent?.user.name ) ? true : false }
+
                 ></textarea>
                 <small id="emailHelp" className="form-text text-muted">Additional information</small>
             </div>
@@ -165,6 +173,8 @@ export const CalendarModal = () => {
             <button
                 type="submit"
                 className="btn btn-primary btn-block"
+                disabled={ (user.name !== activeEvent?.user.name ) ? true : false }
+
             >
                 <i className="far fa-save"></i>
                 <span> Save</span>
