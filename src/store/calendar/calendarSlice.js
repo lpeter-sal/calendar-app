@@ -48,8 +48,8 @@ export const calendarSlice = createSlice({
         },
         onLoadEvents: ( state, { payload = [] }) => {
             state.isLoading = false;
-            payload.forEach( event => {
 
+            payload.forEach( event => {
                 const exists = state.events.some( dbEvent => dbEvent.idEvent === event.idEvent );
                 if ( !exists ) {
                     state.events.push( event );
