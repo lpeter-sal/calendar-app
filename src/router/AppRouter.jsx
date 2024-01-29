@@ -34,7 +34,7 @@ export const AppRouter = () => {
               </>
           )
           : (
-              <>6
+              <>
                 <Route path="/" element={ <CalendarRouter /> } />
                 <Route path="/*" element={ <Navigate to="/" /> } />
               </>

@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pruebas en <AppRouter /> Debe de mostrar el login en caso de no estar autenticado 1`] = `
+<div>
+  <div
+    class="cont-body"
+  >
+    <div
+      class="wrapper"
+    >
+      <form>
+        <h1>
+          CALENDAR APP
+        </h1>
+        <h3>
+          LOGIN
+        </h3>
+        <div
+          class="input-box"
+        >
+          <input
+            name="loginEmail"
+            placeholder="Email"
+            type="text"
+            value=""
+          />
+          <i
+            class="bx bxs-envelope"
+          />
+        </div>
+        <div
+          class="input-box"
+        >
+          <input
+            name="loginPassword"
+            placeholder="Password"
+            type="password"
+            value=""
+          />
+          <i
+            class="bx bxs-lock-alt"
+          />
+        </div>
+        <input
+          class="btn"
+          type="submit"
+          value="Login"
+        />
+        <div
+          class="register-link"
+        >
+          <p>
+            Don't have an account?
+            <a
+              href="/auth/register"
+            >
+                Register HERE!
+            </a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

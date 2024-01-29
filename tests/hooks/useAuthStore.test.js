@@ -5,6 +5,7 @@ import { authSlice } from "../../src/store";
 import { useAuthStore } from "../../src/hooks/useAuthStore";
 import { notAuthenticatedState, initialState } from "../fixtures/authStates";
 import { testUserCredentials } from "../fixtures/testUser";
+import { calendarApi } from "../../src/api";
 
 
 const getMockStore = ( initialState ) => {
@@ -23,6 +24,8 @@ const getMockStore = ( initialState ) => {
 
 
 describe('Pruebas en useAuthStore', () => { 
+
+    beforeEach( () => localStorage.clear() );
 
     test('Debe de regresar el estado por defecto', () => { 
         
@@ -43,7 +46,6 @@ describe('Pruebas en useAuthStore', () => {
     });
 
     test('startLogin Debe de realizar el login correctamente', async() => {
-        localStorage.clear(); 
         
         const mockStore = getMockStore( { ...notAuthenticatedState } );
         const { result } = renderHook( () => useAuthStore(), {
@@ -68,7 +70,6 @@ describe('Pruebas en useAuthStore', () => {
 
     test('startLogin Debe de fallar la autentificacion', async() => {
         
-        localStorage.clear(); 
         const mockStore = getMockStore( { ...notAuthenticatedState } );
         const { result } = renderHook( () => useAuthStore(), {
             wrapper: ({ children }) => <Provider store={ mockStore }> { children } </Provider>
@@ -90,6 +91,103 @@ describe('Pruebas en useAuthStore', () => {
         await waitFor( 
             () => expect( result.current.errorMessage ).toBeUndefined()
         )
+    });
+
+    test('startRegister debe de crear un usuario', async() => { 
+       
+        const newUser = {email: 'registerficticio@sea.com', password: '213246', name: 'Register User'} ;
+
+        const mockStore = getMockStore( { ...notAuthenticatedState } );
+        const { result } = renderHook( () => useAuthStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }> { children } </Provider>
+        });
+
+        // SIMULACION DE REGISTRO DE USUARIO - Usar Spy 
+        const spy = jest.spyOn( calendarApi, 'post' ).mockReturnValue({
+            data: {
+                "ok": true,
+                "msg": "Login",
+                "uid": "123123123",
+                "name": "Test User",
+                "token": "ALGUN-TOKEN"
+            }
+        });
+
+        await act( async() => {
+            await result.current.startRegister(newUser);
+        });
+        
+        const { errorMessage, status, user } = result.current;
+
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: undefined,
+            status: 'authenticated',
+            user: { name: 'Test User', uid: '123123123' }
+        });
+
+        spy.mockRestore();
+    });
+
+    test('startRegister debe de fallar en la creacion', async() => { 
+
+        const mockStore = getMockStore( { ...notAuthenticatedState } );
+        const { result } = renderHook( () => useAuthStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }> { children } </Provider>
+        });
+
+        await act( async() => {
+            await result.current.startRegister(testUserCredentials);
+        });
+        
+        const { errorMessage, status, user } = result.current;
+        expect({ errorMessage, status, user }).toEqual({
+            errorMessage: expect.any(String),
+            status: 'not-authenticated',
+            user: {}
+        });
+    });
+
+
+    test('checkAuthToken debe fallar si no hay token', async() => { 
+
+        const mockStore = getMockStore( { ...initialState } );
+        const { result } = renderHook( () => useAuthStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }> { children } </Provider>
+        });
+
+        await act( async() => {
+            await result.current.checkAuthToken();
+        });
+
+        const { errorMessage, status, user } = result.current;
+        expect({ errorMessage, status, user }).toEqual({ 
+            errorMessage: undefined,
+            status: 'not-authenticated',
+            user: {}
+        });
+    });
+
+    test('checkAuthToken debe de autenticar si el usuario tiene un token', async() => { 
+
+        const { data } = await calendarApi.post('/auth', testUserCredentials );
+        localStorage.setItem( 'token', data.token );
+
+        const mockStore = getMockStore( { ...initialState } );
+        const { result } = renderHook( () => useAuthStore(), {
+            wrapper: ({ children }) => <Provider store={ mockStore }> { children } </Provider>
+        });
+
+        await act( async() => {
+            await result.current.checkAuthToken();
+        });
+
+        const { errorMessage, status, user } = result.current;
+        expect({ errorMessage, status, user }).toEqual({ 
+            errorMessage: undefined,
+            status: 'authenticated',
+            user: { name: 'Test User', uid: '65b522353df8782caddb2cb4' }
+        });
+
     });
 
 });
